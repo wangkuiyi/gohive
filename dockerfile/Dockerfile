@@ -159,3 +159,4 @@ ENV PATH $PATH:$GOPATH/bin
 # Install Go's dependency management tool.
 RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
+COPY script.sh /cmd/script.sh

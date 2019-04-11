@@ -1,0 +1,12 @@
+language: go
+
+branches:
+  only:
+  - make_travisci_work 
+
+service:
+  - docker
+
+script:
+  - docker build -t gohive:dev -f dockerfile/Dockerfile .
+  - docker run --rm -it  gohive:dev sh /cmd/script.sh
