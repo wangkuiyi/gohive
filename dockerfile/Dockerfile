@@ -64,7 +64,7 @@ ENV YARN_CONF_yarn_resourcemanager_scheduler_address=resourcemanager:8030
 ENV YARN_CONF_yarn_resourcemanager_resource__tracker_address=resourcemanager:8031
 
 
-COPY sql-machine-learning/gohive/dockerfile/entrypoint.sh /entrypoint.sh
+COPY gohive/dockerfile/entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
@@ -76,7 +76,7 @@ HEALTHCHECK CMD curl -f http://localhost:50070/ || exit 1
 ENV HDFS_CONF_dfs_namenode_name_dir=file:///hadoop/dfs/name
 RUN mkdir -p /hadoop/dfs/name
 VOLUME /hadoop/dfs/name
-COPY sql-machine-learning/gohive/dockerfile/cmd/start_namenode.sh /cmd/start_namenode.sh
+COPY gohive/dockerfile/cmd/start_namenode.sh /cmd/start_namenode.sh
 RUN chmod a+x /cmd/start_namenode.sh
 
 
@@ -85,19 +85,19 @@ HEALTHCHECK CMD curl -f http://localhost:50075/ || exit 1
 ENV HDFS_CONF_dfs_datanode_data_dir=file:///hadoop/dfs/data
 RUN mkdir -p /hadoop/dfs/data
 VOLUME /hadoop/dfs/data
-COPY sql-machine-learning/gohive/dockerfile/cmd/start_datanode.sh /cmd/start_datanode.sh
+COPY gohive/dockerfile/cmd/start_datanode.sh /cmd/start_datanode.sh
 RUN chmod a+x /cmd/start_datanode.sh
 
 
 # For ResourceManager
 HEALTHCHECK CMD curl -f http://localhost:8088/ || exit 1
-COPY sql-machine-learning/gohive/dockerfile/cmd/start_resourcemanager.sh /cmd/start_resourcemanager.sh
+COPY gohive/dockerfile/cmd/start_resourcemanager.sh /cmd/start_resourcemanager.sh
 RUN chmod a+x /cmd/start_resourcemanager.sh
 
 
 # For NodeManager
 HEALTHCHECK CMD curl -f http://localhost:8042/ || exit 1
-COPY sql-machine-learning/gohive/dockerfile/cmd/start_nodemanager.sh /cmd/start_nodemanager.sh
+COPY gohive/dockerfile/cmd/start_nodemanager.sh /cmd/start_nodemanager.sh
 RUN chmod a+x /cmd/start_nodemanager.sh
 
 
@@ -118,13 +118,13 @@ RUN tar -xzvf apache-hive-$HIVE_VERSION-bin.tar.gz && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
 
-COPY sql-machine-learning/gohive/dockerfile/conf/ $HIVE_HOME/conf
+COPY gohive/dockerfile/conf/ $HIVE_HOME/conf
 
-COPY sql-machine-learning/gohive/dockerfile/cmd/start_hiveserver2.sh /cmd/start_hiveserver2.sh
+COPY gohive/dockerfile/cmd/start_hiveserver2.sh /cmd/start_hiveserver2.sh
 RUN chmod +x /cmd/start_hiveserver2.sh
 
 # Start all hadoop components
-COPY sql-machine-learning/gohive/dockerfile/cmd/start_all.sh /cmd/start_all.sh
+COPY gohive/dockerfile/cmd/start_all.sh /cmd/start_all.sh
 RUN chmod +x /cmd/start_all.sh
 
 # install mysql without a password prompt
@@ -141,8 +141,8 @@ RUN rm -rf /tmp/mysql-connector-java-5.1.47.tar.gz
 RUN rm -rf /tmp/mysql-connector-java-5.1.47
 
 RUN mkdir /dataset
-COPY sql-machine-learning/gohive/dockerfile/dataset/popularize_churn.sql /dataset/popularize_churn.sql
-COPY sql-machine-learning/gohive/dockerfile/dataset/popularize_iris.sql /dataset/popularize_iris.sql
+COPY gohive/dockerfile/dataset/popularize_churn.sql /dataset/popularize_churn.sql
+COPY gohive/dockerfile/dataset/popularize_iris.sql /dataset/popularize_iris.sql
 
 # Install the Go compiler.
 RUN wget --quiet https://dl.google.com/go/go1.11.5.linux-amd64.tar.gz
@@ -159,4 +159,4 @@ ENV PATH $PATH:$GOPATH/bin
 # Install Go's dependency management tool.
 RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
-COPY sql-machine-learning/gohive/dockerfile/script.sh /cmd/script.sh
+COPY gohive/dockerfile/script.sh /cmd/script.sh
